@@ -18,7 +18,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/ipEditText"
+                android:id="@+id/addressEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="IP地址 192.168.1.1"
@@ -37,7 +37,7 @@
                 android:inputType="number" />
 
             <TextView
-                android:id="@+id/connTextView"
+                android:id="@+id/connectTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
