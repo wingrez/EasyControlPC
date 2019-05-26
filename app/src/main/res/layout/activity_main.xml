@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <!--触控面板-->
+        <TextView
+            android:id="@+id/textView0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="占位"/>
+
+        <!--连接配置-->
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/ipEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="IP地址 192.168.1.1"
+                android:inputType="number"
+                android:digits="0123456789."
+                android:maxLength="15"
+                android:padding="20dp" />
+
+            <EditText
+                android:id="@+id/portEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:maxLength="5"
+                android:hint="端口 8080"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+</LinearLayout>
