@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView sendMsgTextView;
     private TextView msgTextView;
 
-    private ArrayAdapter<String> arrayAdapter;
+    private double pre_moveX;
+    private double pre_moveY;
+    private int moveX;
+    private int moveY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         setContentView(R.layout.activity_main);
 
+        touchTextView=(TextView)findViewById(R.id.touchTextView);
         addressEditText=(EditText)findViewById(R.id.addressEditText);
         portEditText=(EditText)findViewById(R.id.portEditText);
         sendMsgEditText=(EditText)findViewById(R.id.sendMsgEditText);
@@ -54,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
         connectTextView.setOnClickListener(new ConnectListener());
         sendMsgTextView.setOnClickListener(new SendListener());
+        touchTextView.setOnTouchListener(new TouchListener());
     }
 
-
+    //connectTextView的点击事件
     private class ConnectListener implements View.OnClickListener {
 
         @Override
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(MessageBean msgBean){
             Log.e("test","onPostExecute");
-            if(msgBean==null || msgBean.getState()!=200){
+            if(msgBean==null || msgBean.getState()!=1){
                 msgTextView.setText(Utils.getTime()+": "+"连接失败\n"+msgTextView.getText());
                 connectTextView.setText("连接");
                 connectTextView.setClickable(true);
@@ -137,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             msgBean=new MessageBean();
-            msgBean.setState(200);
+            msgBean.setState(5); //状态码：发送文本消息
             msgBean.setMessage(sendMsgEditText.getText().toString());
             client.sendMsg(msgBean);
 
@@ -159,12 +164,59 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(MessageBean msgBean){
             Log.e("test","onPostExecute");
-            if(msgBean==null || msgBean.getState()!=200) {
+            if(msgBean==null || msgBean.getState()!=2) {
                 msgTextView.setText(Utils.getTime()+": "+"发送失败\n"+msgTextView.getText());
             }
             else{
                 msgTextView.setText(Utils.getTime()+": "+msgBean.getMessage()+"\n"+msgTextView.getText());
             }
         }
+
+    }
+
+    private class TouchListener implements View.OnTouchListener {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    pre_moveX=event.getX();
+                    pre_moveY= event.getY();
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE:
+                    moveX=(int)(event.getX()-pre_moveX);
+                    moveY=(int)(event.getY()-pre_moveY);
+                    pre_moveX=event.getX();
+                    pre_moveY=event.getY();
+                    new SendMouseTask().execute();
+                    new ReceiveTask().execute();
+                    System.out.println("moveX:"+moveX);
+                    System.out.println("moveY:"+moveY);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    }
+
+    private class SendMouseTask extends AsyncTask<Void, Void ,Boolean>{
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.e("test","doInBackground");
+            msgBean=new MessageBean();
+            msgBean.setState(4); //状态码：发送鼠标消息
+            msgBean.setMessage("发送鼠标消息");
+            msgBean.setMoveX(moveX);
+            msgBean.setMoveY(moveY);
+            client.sendMsg(msgBean);
+            return true;
+        }
+
+        protected void onPostExecute(Boolean bool){
+            Log.e("test","onPostExecute");
+        }
+
     }
 }

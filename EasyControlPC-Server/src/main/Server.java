@@ -30,7 +30,7 @@ public class Server {
 			System.out.println();
 			//发送连接成功消息
 			msgBean.init();
-			msgBean.setState(200);
+			msgBean.setState(1);
 			msgBean.setMessage("连接成功！");
 			sendMsg(msgBean);
 			
@@ -40,12 +40,12 @@ public class Server {
 				if(msgBean!=null) {
 					System.out.println("接收到消息："+msgBean.toString());
 					
-					if(msgBean.getMoveX()!=0 || msgBean.getMoveY()!=0) {
+					if(msgBean.getState()==4) {
 						mouseMove.move(msgBean.getMoveX(), msgBean.getMoveY());
 					}
 					
 					msgBean.init();
-					msgBean.setState(200);
+					msgBean.setState(2);
 					msgBean.setMessage("服务端已接收");
 					sendMsg(msgBean);
 				}

@@ -4,6 +4,17 @@ import com.google.gson.Gson;
 
 public class MessageBean {
 
+	/*
+	 * state
+	 * 1：连接成功
+	 * 2：接收消息成功
+	 * 3：发送状态消息
+	 * 4、发送鼠标消息
+	 * 5、发送文本消息
+	 * 
+	 * */
+	
+	
 	private int state;
 	private String message;
 	private int moveX;
