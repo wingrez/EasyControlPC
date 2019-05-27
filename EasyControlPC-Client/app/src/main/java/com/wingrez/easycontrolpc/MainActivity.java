@@ -1,5 +1,7 @@
 package com.wingrez.easycontrolpc;
 
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wingrez.easycontrolpc.utils.Client;
+import com.wingrez.easycontrolpc.utils.MessageBean;
 import com.wingrez.easycontrolpc.utils.Utils;
 
 import java.io.IOException;
@@ -21,10 +24,12 @@ public class MainActivity extends AppCompatActivity {
     private int port;
 
     private Client client;
+    private MessageBean msgBean;
 
     private EditText addressEditText;
     private EditText portEditText;
     private TextView connectTextView;
+    private TextView msgTextView;
 
 
     @Override
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         addressEditText=(EditText)findViewById(R.id.addressEditText);
         portEditText=(EditText)findViewById(R.id.portEditText);
         connectTextView=(TextView)findViewById(R.id.connectTextView);
+        msgTextView=(TextView)findViewById(R.id.msgTextView);
         connectTextView.setOnClickListener(new ConnectListener());
         connectTextView.setClickable(true);
         addressEditText.setEnabled(true);
@@ -50,45 +56,65 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            if(!addressEditText.getText().toString().isEmpty() && !portEditText.getText().toString().isEmpty()){
-                address=addressEditText.getText().toString();
-                port=Integer.valueOf(portEditText.getText().toString());
-                Log.e("address", address);
-                Log.e("port", String.valueOf(port));
+            if(connectTextView.getText().toString().equals("连接")){
+                if(connect()==true){
+
+                }
             }
-            else{
+        }
+
+        private boolean connect(){
+            if(addressEditText.getText().toString().isEmpty() || portEditText.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(), "请填写连接信息", Toast.LENGTH_SHORT).show();
-                return;
+                return false;
             }
+
+            address=addressEditText.getText().toString();
+            port=Integer.valueOf(portEditText.getText().toString());
+            Log.e("address", address);
+            Log.e("port", String.valueOf(port));
 
             if(!Utils.checkAddressValid(address) || !Utils.checkPortValid(port)){
                 Toast.makeText(getApplicationContext(), "连接信息格式非法", Toast.LENGTH_SHORT).show();
-                return;
+                return false;
             }
-
             connectTextView.setText("正在连接");
             connectTextView.setClickable(false);
 
-            new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        client=new Client(address,port);
-//                        client.sendMsg("Hello, I am wingrez\n");
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "连接失败", Toast.LENGTH_SHORT).show();
-                        connectTextView.setText("连接");
-                        connectTextView.setClickable(true);
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-            }).start();
+            new ClientTask().execute();
 
-            connectTextView.setText("断开连接");
-            connectTextView.setClickable(true);
-            addressEditText.setEnabled(false);
-            portEditText.setEnabled(false);
+            return true;
+        }
+    }
+
+    private class ClientTask extends AsyncTask<Void, Void ,MessageBean>{
+        @Override
+        protected MessageBean doInBackground(Void... voids) {
+            try {
+                client=new Client(address, port);
+                return client.receiveMsg();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(MessageBean msgBean){
+            msgTextView.setText(msgBean.toString());
+
+            if(msgBean.getState()==200){
+                connectTextView.setText("断开连接");
+                connectTextView.setClickable(true);
+                addressEditText.setEnabled(false);
+                portEditText.setEnabled(false);
+            }
+
+            else {
+                connectTextView.setText("连接");
+                connectTextView.setClickable(true);
+                addressEditText.setEnabled(true);
+                portEditText.setEnabled(true);
+            }
         }
     }
 }

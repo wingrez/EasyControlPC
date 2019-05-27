@@ -27,13 +27,13 @@ public class Client {
             br=new BufferedReader(new InputStreamReader(is));
     }
 
-    public void sendMsg(String msg){
-            pw.write(msg);
+    public void sendMsg(MessageBean msgBean){
+            pw.write(msgBean.toString());
             pw.flush();
     }
 
-    public String receiveMsg() throws Exception {
-        return br.readLine();
+    public MessageBean receiveMsg() throws Exception {
+        return new MessageBean(br.readLine());
     }
 
     public void close() throws Exception {
