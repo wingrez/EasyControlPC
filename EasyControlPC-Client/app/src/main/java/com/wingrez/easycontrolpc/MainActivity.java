@@ -60,9 +60,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(connectTextView.getText().toString().equals("连接")){
-                if(connect()==true){
-
-                }
+                connect();
             }
         }
 
@@ -106,14 +104,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(MessageBean msgBean){
             Log.e("test","onPostExecute");
             if(msgBean==null || msgBean.getState()!=200){
-                msgTextView.setText("连接失败");
+                msgTextView.setText(Utils.getTime()+": "+"连接失败\n"+msgTextView.getText());
                 connectTextView.setText("连接");
                 connectTextView.setClickable(true);
                 addressEditText.setEnabled(true);
                 portEditText.setEnabled(true);
                 return;
             }
-            msgTextView.setText(msgBean.toString());
+            msgTextView.setText(Utils.getTime()+": "+msgBean.getMessage()+"\n"+msgTextView.getText());
             connectTextView.setText("断开连接");
             connectTextView.setClickable(true);
             addressEditText.setEnabled(false);
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "未连接", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.d("test","SendListener");
+            Log.e("test","SendListener");
 
             if(sendMsgEditText.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(), "请填写要发送的信息", Toast.LENGTH_SHORT).show();
@@ -160,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(MessageBean msgBean){
             Log.e("test","onPostExecute");
             if(msgBean==null || msgBean.getState()!=200) {
-                msgTextView.setText("发送失败");
+                msgTextView.setText(Utils.getTime()+": "+"发送失败\n"+msgTextView.getText());
             }
             else{
-                msgTextView.setText(msgBean.toString());
+                msgTextView.setText(Utils.getTime()+": "+msgBean.getMessage()+"\n"+msgTextView.getText());
             }
         }
     }

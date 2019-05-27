@@ -74,11 +74,22 @@
 
         </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
         <TextView
             android:id="@+id/msgTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="消息"/>
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarFadeDuration="3000"
+            android:isScrollContainer="true"
+            android:padding="15dp"/>
+
+    </ScrollView>
 
 
 </LinearLayout>

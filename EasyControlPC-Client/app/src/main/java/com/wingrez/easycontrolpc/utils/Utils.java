@@ -1,5 +1,8 @@
 package com.wingrez.easycontrolpc.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Utils {
 
     public static boolean checkAddressValid(String address) {
@@ -22,5 +25,10 @@ public class Utils {
     public static boolean checkPortValid(int port) {
         if(!(port>=0 && port<=65535)) return false;
         return true;
+    }
+
+    public static String getTime(){
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        return df.format(new Date());
     }
 }

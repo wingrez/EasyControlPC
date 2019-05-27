@@ -81,7 +81,7 @@ public class Server {
 		if(serverSocket!=null) server.close();
 	}
 
-//	public static void main(String[] args) {
-//		new Server();
-//	}
+	public static void main(String[] args) {
+		new Server();
+	}
 }
