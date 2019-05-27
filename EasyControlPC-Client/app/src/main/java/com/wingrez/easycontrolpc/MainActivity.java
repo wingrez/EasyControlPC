@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private Client client;
     private MessageBean msgBean;
 
+    private TextView touchTextView;
     private EditText addressEditText;
     private EditText portEditText;
     private EditText sendMsgEditText;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         setContentView(R.layout.activity_main);
+
         addressEditText=(EditText)findViewById(R.id.addressEditText);
         portEditText=(EditText)findViewById(R.id.portEditText);
         sendMsgEditText=(EditText)findViewById(R.id.sendMsgEditText);
