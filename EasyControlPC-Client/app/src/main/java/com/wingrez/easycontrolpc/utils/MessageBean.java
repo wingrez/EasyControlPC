@@ -1,14 +1,12 @@
 package com.wingrez.easycontrolpc.utils;
 
-
-import android.os.Message;
-
 import com.google.gson.Gson;
 
 public class MessageBean {
 
 	/*
 	 * state
+	 * -1：断开连接
 	 * 1：连接成功
 	 * 2：接收消息成功
 	 * 3：发送状态消息
@@ -85,12 +83,5 @@ public class MessageBean {
 		moveX=0;
 		moveY=0;
 	}
-	
-	
-//	public static void main(String[] args) {
-//		MessageBean msgBean=new MessageBean();
-//		msgBean.setState(200);
-//		msgBean.setMessage("Hello world!");
-//		System.out.println(msgBean.toJson());
-//	}
+
 }

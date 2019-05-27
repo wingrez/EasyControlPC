@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private int port;
 
     private Client client;
-    private MessageBean msgBean;
 
     private TextView touchTextView;
     private EditText addressEditText;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client=null;
-        msgBean=null;
         initView();
     }
 
@@ -54,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         sendMsgTextView = (TextView) findViewById(R.id.sendMsgTextView);
         msgTextView = (TextView) findViewById(R.id.msgTextView);
 
-        connectTextView.setClickable(true);
         addressEditText.setEnabled(true);
         portEditText.setEnabled(true);
 
@@ -71,60 +68,74 @@ public class MainActivity extends AppCompatActivity {
             if (connectTextView.getText().toString().equals("连接")) {
                 connect();
             }
+            else if(connectTextView.getText().toString().equals("断开连接")){
+                shutdown();
+            }
         }
 
-        private boolean connect() {
+        private void connect() {
             if (addressEditText.getText().toString().isEmpty() || portEditText.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "请填写连接信息", Toast.LENGTH_SHORT).show();
-                return false;
+                return;
             }
 
             address = addressEditText.getText().toString();
             port = Integer.valueOf(portEditText.getText().toString());
-            Log.e("address", address);
-            Log.e("port", String.valueOf(port));
 
             if (!Utils.checkAddressValid(address) || !Utils.checkPortValid(port)) {
                 Toast.makeText(getApplicationContext(), "连接信息格式非法", Toast.LENGTH_SHORT).show();
-                return false;
+                return;
             }
             connectTextView.setText("正在连接");
-            connectTextView.setClickable(false);
+            addressEditText.setEnabled(false);
+            portEditText.setEnabled(false);
 
             new ClientTask().execute();
+        }
 
-            return true;
+        private void shutdown(){
+            if(client!=null){
+                try {
+                    client.sendMsg(new MessageBean(-1,"断开连接",0,0));
+                    client.close();
+                    client=null;
+                    msgTextView.setText(Utils.getTime()+" "+"断开连接！\n"+msgTextView.getText());
+                    connectTextView.setText("连接");
+                    addressEditText.setEnabled(true);
+                    portEditText.setEnabled(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private class ClientTask extends AsyncTask<Void, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(Void... voids) {
-            Log.e("test", "doInBackground");
             try {
                 client = new Client(address, port);
                 return client.receiveMsg();
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         protected void onPostExecute(MessageBean msgBean) {
             Log.e("test", "onPostExecute");
             if (msgBean == null || msgBean.getState() != 1) {
-                msgTextView.setText(Utils.getTime() + ": " + "连接失败\n" + msgTextView.getText());
+                msgTextView.setText(Utils.getTime() + " " + "连接失败！\n" + msgTextView.getText());
                 connectTextView.setText("连接");
-                connectTextView.setClickable(true);
                 addressEditText.setEnabled(true);
                 portEditText.setEnabled(true);
-                return;
+            } else{
+                msgTextView.setText(Utils.getTime() + " " +"连接成功！\n" + msgTextView.getText());
+                msgTextView.setText(Utils.getTime() + " " + "接收到消息：" + msgBean.getMessage() + "\n" + msgTextView.getText());
+                connectTextView.setText("断开连接");
+                addressEditText.setEnabled(false);
+                portEditText.setEnabled(false);
             }
-            msgTextView.setText(Utils.getTime() + ": " + msgBean.getMessage() + "\n" + msgTextView.getText());
-            connectTextView.setText("断开连接");
-            connectTextView.setClickable(true);
-            addressEditText.setEnabled(false);
-            portEditText.setEnabled(false);
         }
     }
 
@@ -136,18 +147,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "未连接", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.e("test", "SendListener");
-
             if (sendMsgEditText.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "请填写要发送的信息", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            msgBean = new MessageBean();
-            msgBean.setState(5); //状态码：发送文本消息
-            msgBean.setMessage(sendMsgEditText.getText().toString());
-            client.sendMsg(msgBean);
-
+            client.sendMsg(new MessageBean(6,sendMsgEditText.getText().toString(),0,0));
             new ReceiveTask().execute();
         }
     }
@@ -160,16 +165,25 @@ public class MainActivity extends AppCompatActivity {
                 return client.receiveMsg();
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         protected void onPostExecute(MessageBean msgBean) {
             Log.e("test", "onPostExecute");
             if (msgBean == null || msgBean.getState() != 2) {
-                msgTextView.setText(Utils.getTime() + ": " + "发送失败\n" + msgTextView.getText());
+                msgTextView.setText(Utils.getTime() + " 发送失败，与服务端失去连接。\n"  + msgTextView.getText());
+                try {
+                    client.close();
+                    client=null;
+                    connectTextView.setText("连接");
+                    addressEditText.setEnabled(true);
+                    portEditText.setEnabled(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
-                msgTextView.setText(Utils.getTime() + ": " + msgBean.getMessage() + "\n" + msgTextView.getText());
+                msgTextView.setText(Utils.getTime() + " 接收到消息：" + msgBean.getMessage() + "\n" + msgTextView.getText());
             }
         }
 
@@ -179,31 +193,35 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if(client==null) return false;
+            if(client==null){
+                Toast.makeText(getApplicationContext(), "未连接", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    Log.e("touch","down");
                     nowX=preX = event.getX();
                     nowY=preY = event.getY();
                     break;
+                case MotionEvent.ACTION_UP:
+                    Log.e("touch","up");
+                    nowX=event.getX();
+                    nowY=event.getY();
+                    if (nowX == preX && nowY == preY) {
+                        client.sendMsg(new MessageBean(5, "鼠标点击", 0, 0));
+                        new ReceiveTask().execute();
+                    }
+                    break;
                 case MotionEvent.ACTION_MOVE:
+                    Log.e("touch","move");
                     preX = nowX;
                     preY = nowY;
                     nowX=event.getX();
                     nowY=event.getY();
                     moveX = (int) Math.round(nowX - preX);
                     moveY = (int) Math.round(nowY - preY);
-                    client.sendMsg(new MessageBean(4, "鼠标移动事件", moveX, moveY));
+                    client.sendMsg(new MessageBean(4, "鼠标移动", moveX, moveY));
                     new ReceiveTask().execute();
-                    System.out.println("moveX:" + moveX);
-                    System.out.println("moveY:" + moveY);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    nowX=event.getX();
-                    nowY=event.getY();
-                    if (nowX == preX && nowY == preY) {
-                        client.sendMsg(new MessageBean(5, "鼠标点击事件", 0, 0));
-                        new ReceiveTask().execute();
-                    }
                     break;
                 default:
                     break;
@@ -211,5 +229,4 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
-
 }

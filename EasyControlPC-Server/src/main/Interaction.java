@@ -7,11 +7,11 @@ import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
-public class MouseMove {
+public class Interaction {
 
 	private Robot robot;
 	
-	public MouseMove() {
+	public Interaction() {
 		try {
 			robot=new Robot();
 			
@@ -33,15 +33,4 @@ public class MouseMove {
 		robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
 	}
 	
-	public void setAutoDelay(int ms) {
-		robot.setAutoDelay(ms);
-	}
-	
-//	public static void main(String[] args) {
-//		MouseMove mouseMove=new MouseMove();
-//		mouseMove.setAutoDelay(3000);
-//		mouseMove.move(0, 0);
-//		mouseMove.move(200, 0);
-//		mouseMove.move(0, 200);
-//	}
 }

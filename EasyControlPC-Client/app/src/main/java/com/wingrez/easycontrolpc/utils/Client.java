@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Client {
@@ -20,7 +21,8 @@ public class Client {
 
 
     public Client(String address, int port) throws Exception{
-            socket=new Socket(address,port);
+            socket=new Socket();
+            socket.connect(new InetSocketAddress(address,port), 5000);
             os=socket.getOutputStream();
             out=new PrintWriter(os);
             is=socket.getInputStream();

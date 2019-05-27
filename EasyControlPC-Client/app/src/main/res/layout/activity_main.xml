@@ -19,15 +19,17 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <EditText
                 android:id="@+id/addressEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:digits="0123456789."
                 android:hint="IP地址 192.168.1.1"
                 android:inputType="number"
-                android:digits="0123456789."
                 android:maxLength="15"
                 android:padding="10dp" />
 
@@ -35,10 +37,10 @@
                 android:id="@+id/portEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:maxLength="5"
                 android:hint="端口 8080"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="5"
+                android:padding="10dp" />
 
             <EditText
                 android:id="@+id/sendMsgEditText"
@@ -89,7 +91,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/msgTextView"
@@ -98,8 +101,7 @@
             android:scrollbars="vertical"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbarFadeDuration="3000"
-            android:isScrollContainer="true"
-            android:padding="10dp"/>
+            android:isScrollContainer="true" />
 
     </ScrollView>
 
