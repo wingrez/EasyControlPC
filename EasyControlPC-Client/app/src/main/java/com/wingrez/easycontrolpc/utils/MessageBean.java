@@ -7,8 +7,8 @@ public class MessageBean {
 
 	private int state;
 	private String message;
-	private double moveX;
-	private double moveY;
+	private int moveX;
+	private int moveY;
 	
 	public MessageBean() {
 		
@@ -34,16 +34,16 @@ public class MessageBean {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public double getMoveX() {
+	public int getMoveX() {
 		return moveX;
 	}
-	public void setMoveX(double moveX) {
+	public void setMoveX(int moveX) {
 		this.moveX = moveX;
 	}
-	public double getMoveY() {
+	public int getMoveY() {
 		return moveY;
 	}
-	public void setMoveY(double moveY) {
+	public void setMoveY(int moveY) {
 		this.moveY = moveY;
 	}
 	
