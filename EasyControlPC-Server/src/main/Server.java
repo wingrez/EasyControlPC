@@ -10,9 +10,11 @@ public class Server {
 	private BufferedReader in;
 	private PrintWriter out;
 	private MessageBean msgBean;
+	private MouseMove mouseMove;
 	
 	public Server() {
 		msgBean=new MessageBean();
+		mouseMove=new MouseMove();
 		
 		try {
 			serverSocket = new ServerSocket(8888);
@@ -27,6 +29,7 @@ public class Server {
 			System.out.println("客户端上线：" + remoteIP + ":" + remotePort);
 			System.out.println();
 			//发送连接成功消息
+			msgBean.init();
 			msgBean.setState(200);
 			msgBean.setMessage("连接成功！");
 			sendMsg(msgBean);
@@ -36,6 +39,12 @@ public class Server {
 				msgBean=receiveMsg();
 				if(msgBean!=null) {
 					System.out.println("接收到消息："+msgBean.toString());
+					
+					if(msgBean.getMoveX()!=0 || msgBean.getMoveY()!=0) {
+						mouseMove.move(msgBean.getMoveX(), msgBean.getMoveY());
+					}
+					
+					msgBean.init();
 					msgBean.setState(200);
 					msgBean.setMessage("服务端已接收");
 					sendMsg(msgBean);

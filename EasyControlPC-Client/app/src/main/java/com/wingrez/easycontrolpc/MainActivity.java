@@ -1,13 +1,11 @@
 package com.wingrez.easycontrolpc;
 
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +13,6 @@ import android.widget.Toast;
 import com.wingrez.easycontrolpc.utils.Client;
 import com.wingrez.easycontrolpc.utils.MessageBean;
 import com.wingrez.easycontrolpc.utils.Utils;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,17 +26,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText portEditText;
     private EditText sendMsgEditText;
     private TextView connectTextView;
-    private TextView msgTextView;
     private TextView sendMsgTextView;
+    private TextView msgTextView;
 
-
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-
-
     }
 
     private void initView() {
@@ -49,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         portEditText=(EditText)findViewById(R.id.portEditText);
         sendMsgEditText=(EditText)findViewById(R.id.sendMsgEditText);
         connectTextView=(TextView)findViewById(R.id.connectTextView);
-        msgTextView=(TextView)findViewById(R.id.msgTextView);
         sendMsgTextView=(TextView)findViewById(R.id.sendMsgTextView);
+        msgTextView=(TextView)findViewById(R.id.msgTextView);
 
         connectTextView.setClickable(true);
         addressEditText.setEnabled(true);

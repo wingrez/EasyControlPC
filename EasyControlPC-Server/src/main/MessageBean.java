@@ -10,7 +10,7 @@ public class MessageBean {
 	private int moveY;
 	
 	public MessageBean() {
-		
+		init();
 	}
 	
 	public MessageBean(String json) {
@@ -56,6 +56,13 @@ public class MessageBean {
 	
 	public String toString() {
 		return toJson();
+	}
+	
+	public void init() {
+		state=0;
+		message="";
+		moveX=0;
+		moveY=0;
 	}
 	
 	
