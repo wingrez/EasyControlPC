@@ -5,6 +5,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 public class MouseMove {
 
@@ -25,6 +26,11 @@ public class MouseMove {
 		int now_x = (int)p.getX();
 		int now_y = (int)p.getY();
 		robot.mouseMove(now_x+x, now_y+y);
+	}
+	
+	public void click() {
+		robot.mousePress(KeyEvent.BUTTON1_DOWN_MASK);
+		robot.mouseRelease(KeyEvent.BUTTON1_DOWN_MASK);
 	}
 	
 	public void setAutoDelay(int ms) {

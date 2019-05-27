@@ -44,6 +44,10 @@ public class Server {
 						mouseMove.move(msgBean.getMoveX(), msgBean.getMoveY());
 					}
 					
+					else if(msgBean.getState()==5) {
+						mouseMove.click();
+					}
+					
 					msgBean.init();
 					msgBean.setState(2);
 					msgBean.setMessage("服务端已接收");

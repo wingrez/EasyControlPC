@@ -1,6 +1,8 @@
 package com.wingrez.easycontrolpc.utils;
 
 
+import android.os.Message;
+
 import com.google.gson.Gson;
 
 public class MessageBean {
@@ -10,8 +12,9 @@ public class MessageBean {
 	 * 1：连接成功
 	 * 2：接收消息成功
 	 * 3：发送状态消息
-	 * 4、发送鼠标消息
-	 * 5、发送文本消息
+	 * 4、发送鼠标移动消息
+	 * 5、发送鼠标点击消息
+	 * 6、发送文本消息
 	 *
 	 * */
 
@@ -30,6 +33,13 @@ public class MessageBean {
 		this.setMessage(msgBean.getMessage());
 		this.setMoveX(msgBean.getMoveX());
 		this.setMoveY(msgBean.getMoveY());
+	}
+
+	public MessageBean(int state, String message, int moveX, int moveY){
+		this.state=state;
+		this.message=message;
+		this.moveX=moveX;
+		this.moveY=moveY;
 	}
 	
 	public int getState() {

@@ -30,27 +30,29 @@ public class MainActivity extends AppCompatActivity {
     private TextView sendMsgTextView;
     private TextView msgTextView;
 
-    private double pre_moveX;
-    private double pre_moveY;
+    double nowX,nowY;
+    double preX,preY;
     private int moveX;
     private int moveY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client=null;
+        msgBean=null;
         initView();
     }
 
     private void initView() {
         setContentView(R.layout.activity_main);
 
-        touchTextView=(TextView)findViewById(R.id.touchTextView);
-        addressEditText=(EditText)findViewById(R.id.addressEditText);
-        portEditText=(EditText)findViewById(R.id.portEditText);
-        sendMsgEditText=(EditText)findViewById(R.id.sendMsgEditText);
-        connectTextView=(TextView)findViewById(R.id.connectTextView);
-        sendMsgTextView=(TextView)findViewById(R.id.sendMsgTextView);
-        msgTextView=(TextView)findViewById(R.id.msgTextView);
+        touchTextView = (TextView) findViewById(R.id.touchTextView);
+        addressEditText = (EditText) findViewById(R.id.addressEditText);
+        portEditText = (EditText) findViewById(R.id.portEditText);
+        sendMsgEditText = (EditText) findViewById(R.id.sendMsgEditText);
+        connectTextView = (TextView) findViewById(R.id.connectTextView);
+        sendMsgTextView = (TextView) findViewById(R.id.sendMsgTextView);
+        msgTextView = (TextView) findViewById(R.id.msgTextView);
 
         connectTextView.setClickable(true);
         addressEditText.setEnabled(true);
@@ -66,23 +68,23 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            if(connectTextView.getText().toString().equals("连接")){
+            if (connectTextView.getText().toString().equals("连接")) {
                 connect();
             }
         }
 
-        private boolean connect(){
-            if(addressEditText.getText().toString().isEmpty() || portEditText.getText().toString().isEmpty()){
+        private boolean connect() {
+            if (addressEditText.getText().toString().isEmpty() || portEditText.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "请填写连接信息", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
-            address=addressEditText.getText().toString();
-            port=Integer.valueOf(portEditText.getText().toString());
+            address = addressEditText.getText().toString();
+            port = Integer.valueOf(portEditText.getText().toString());
             Log.e("address", address);
             Log.e("port", String.valueOf(port));
 
-            if(!Utils.checkAddressValid(address) || !Utils.checkPortValid(port)){
+            if (!Utils.checkAddressValid(address) || !Utils.checkPortValid(port)) {
                 Toast.makeText(getApplicationContext(), "连接信息格式非法", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -95,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ClientTask extends AsyncTask<Void, Void ,MessageBean>{
+    private class ClientTask extends AsyncTask<Void, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(Void... voids) {
-            Log.e("test","doInBackground");
+            Log.e("test", "doInBackground");
             try {
-                client=new Client(address, port);
+                client = new Client(address, port);
                 return client.receiveMsg();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -108,17 +110,17 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onPostExecute(MessageBean msgBean){
-            Log.e("test","onPostExecute");
-            if(msgBean==null || msgBean.getState()!=1){
-                msgTextView.setText(Utils.getTime()+": "+"连接失败\n"+msgTextView.getText());
+        protected void onPostExecute(MessageBean msgBean) {
+            Log.e("test", "onPostExecute");
+            if (msgBean == null || msgBean.getState() != 1) {
+                msgTextView.setText(Utils.getTime() + ": " + "连接失败\n" + msgTextView.getText());
                 connectTextView.setText("连接");
                 connectTextView.setClickable(true);
                 addressEditText.setEnabled(true);
                 portEditText.setEnabled(true);
                 return;
             }
-            msgTextView.setText(Utils.getTime()+": "+msgBean.getMessage()+"\n"+msgTextView.getText());
+            msgTextView.setText(Utils.getTime() + ": " + msgBean.getMessage() + "\n" + msgTextView.getText());
             connectTextView.setText("断开连接");
             connectTextView.setClickable(true);
             addressEditText.setEnabled(false);
@@ -126,22 +128,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class SendListener implements View.OnClickListener{
+    private class SendListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if(!connectTextView.getText().toString().equals("断开连接") || client==null){
+            if (!connectTextView.getText().toString().equals("断开连接") || client == null) {
                 Toast.makeText(getApplicationContext(), "未连接", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.e("test","SendListener");
+            Log.e("test", "SendListener");
 
-            if(sendMsgEditText.getText().toString().isEmpty()){
+            if (sendMsgEditText.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "请填写要发送的信息", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            msgBean=new MessageBean();
+            msgBean = new MessageBean();
             msgBean.setState(5); //状态码：发送文本消息
             msgBean.setMessage(sendMsgEditText.getText().toString());
             client.sendMsg(msgBean);
@@ -150,10 +152,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ReceiveTask extends AsyncTask<Void, Void ,MessageBean>{
+    private class ReceiveTask extends AsyncTask<Void, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(Void... voids) {
-            Log.e("test","doInBackground");
+            Log.e("test", "doInBackground");
             try {
                 return client.receiveMsg();
             } catch (Exception e) {
@@ -162,13 +164,12 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onPostExecute(MessageBean msgBean){
-            Log.e("test","onPostExecute");
-            if(msgBean==null || msgBean.getState()!=2) {
-                msgTextView.setText(Utils.getTime()+": "+"发送失败\n"+msgTextView.getText());
-            }
-            else{
-                msgTextView.setText(Utils.getTime()+": "+msgBean.getMessage()+"\n"+msgTextView.getText());
+        protected void onPostExecute(MessageBean msgBean) {
+            Log.e("test", "onPostExecute");
+            if (msgBean == null || msgBean.getState() != 2) {
+                msgTextView.setText(Utils.getTime() + ": " + "发送失败\n" + msgTextView.getText());
+            } else {
+                msgTextView.setText(Utils.getTime() + ": " + msgBean.getMessage() + "\n" + msgTextView.getText());
             }
         }
 
@@ -178,21 +179,31 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if(client==null) return false;
             switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN: {
-                    pre_moveX=event.getX();
-                    pre_moveY= event.getY();
+                case MotionEvent.ACTION_DOWN:
+                    nowX=preX = event.getX();
+                    nowY=preY = event.getY();
                     break;
-                }
                 case MotionEvent.ACTION_MOVE:
-                    moveX=(int)(event.getX()-pre_moveX);
-                    moveY=(int)(event.getY()-pre_moveY);
-                    pre_moveX=event.getX();
-                    pre_moveY=event.getY();
-                    new SendMouseTask().execute();
+                    preX = nowX;
+                    preY = nowY;
+                    nowX=event.getX();
+                    nowY=event.getY();
+                    moveX = (int) Math.round(nowX - preX);
+                    moveY = (int) Math.round(nowY - preY);
+                    client.sendMsg(new MessageBean(4, "鼠标移动事件", moveX, moveY));
                     new ReceiveTask().execute();
-                    System.out.println("moveX:"+moveX);
-                    System.out.println("moveY:"+moveY);
+                    System.out.println("moveX:" + moveX);
+                    System.out.println("moveY:" + moveY);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    nowX=event.getX();
+                    nowY=event.getY();
+                    if (nowX == preX && nowY == preY) {
+                        client.sendMsg(new MessageBean(5, "鼠标点击事件", 0, 0));
+                        new ReceiveTask().execute();
+                    }
                     break;
                 default:
                     break;
@@ -201,22 +212,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class SendMouseTask extends AsyncTask<Void, Void ,Boolean>{
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            Log.e("test","doInBackground");
-            msgBean=new MessageBean();
-            msgBean.setState(4); //状态码：发送鼠标消息
-            msgBean.setMessage("发送鼠标消息");
-            msgBean.setMoveX(moveX);
-            msgBean.setMoveY(moveY);
-            client.sendMsg(msgBean);
-            return true;
-        }
-
-        protected void onPostExecute(Boolean bool){
-            Log.e("test","onPostExecute");
-        }
-
-    }
 }
