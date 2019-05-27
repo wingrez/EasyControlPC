@@ -15,31 +15,38 @@ public class Client {
     private Socket socket;
     private InputStream is;
     private OutputStream os;
-    private BufferedReader br;
-    private PrintWriter pw;
+    private BufferedReader in;
+    private PrintWriter out;
 
 
     public Client(String address, int port) throws Exception{
             socket=new Socket(address,port);
             os=socket.getOutputStream();
-            pw=new PrintWriter(os);
+            out=new PrintWriter(os);
             is=socket.getInputStream();
-            br=new BufferedReader(new InputStreamReader(is));
+            in=new BufferedReader(new InputStreamReader(is));
     }
 
-    public void sendMsg(MessageBean msgBean){
-            pw.write(msgBean.toString());
-            pw.flush();
+    public void sendMsg(MessageBean msg) {
+        if(out!=null) {
+            out.println(msg.toString());
+            out.flush();
+        }
     }
 
     public MessageBean receiveMsg() throws Exception {
-        return new MessageBean(br.readLine());
+        if(in!=null) {
+            String data=in.readLine();
+            if(data!=null) return new MessageBean(data);
+            return null;
+        }
+        return null;
     }
 
     public void close() throws Exception {
-        if(br!=null) br.close();
+        if(in!=null) in.close();
         if(is!=null) is.close();
-        if(pw!=null) pw.close();
+        if(out!=null) out.close();
         if(os!=null) os.close();
         if(socket!=null) socket.close();
     }

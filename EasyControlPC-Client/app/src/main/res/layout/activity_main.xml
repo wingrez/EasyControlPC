@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
-                android:hint="要发送的消息"/>
+                android:hint="要发送的信息"/>
 
             <TextView
                 android:id="@+id/sendMsgTextView"

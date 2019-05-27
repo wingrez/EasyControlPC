@@ -5,8 +5,8 @@ import java.net.*;
 
 
 public class Server {
-	private ServerSocket server;
-	private Socket client;
+	private ServerSocket serverSocket;
+	private Socket server;
 	private BufferedReader in;
 	private PrintWriter out;
 	private MessageBean msgBean;
@@ -15,15 +15,15 @@ public class Server {
 		msgBean=new MessageBean();
 		
 		try {
-			server = new ServerSocket(8888);
+			serverSocket = new ServerSocket(8888);
 			System.out.println("等待建立连接");
-			client = server.accept();
+			server = serverSocket.accept();
 			// 获取客户端地址和端口信息
-			String remoteIP = client.getInetAddress().getHostAddress();
-			int remotePort = client.getLocalPort();
+			String remoteIP = server.getInetAddress().getHostAddress();
+			int remotePort = server.getLocalPort();
 			// 获取客户端的输入输出流
-			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			out = new PrintWriter(client.getOutputStream(), false);
+			in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+			out = new PrintWriter(server.getOutputStream(), false);
 			System.out.println("客户端上线：" + remoteIP + ":" + remotePort);
 			System.out.println();
 			//发送连接成功消息
@@ -31,30 +31,36 @@ public class Server {
 			msgBean.setMessage("连接成功！");
 			sendMsg(msgBean);
 			
-//			while(true) {
-//				msgBean=receiveMsg();
-//				if(msgBean!=null) System.out.println(msgBean.toString());
-//				else break;
-//			}
+			// 接收客户端消息
+			while(true) {
+				msgBean=receiveMsg();
+				if(msgBean!=null) {
+					System.out.println("接收到消息："+msgBean.toString());
+					msgBean.setState(200);
+					msgBean.setMessage("服务端已接收");
+					sendMsg(msgBean);
+				}
+				
+			}
 			
-			close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		
 	}
 	
 	public void sendMsg(MessageBean msg) {
 		if(out!=null) {
 			out.println(msg.toString());
+			out.flush();
 		}
 	}
 	
 	public MessageBean receiveMsg() throws IOException {
 		if(in!=null) {
 			String data=in.readLine();
-			return new MessageBean(data);
+			if(data!=null) return new MessageBean(data);
+			return null;
 		}
 		return null;
 	}
@@ -62,8 +68,8 @@ public class Server {
 	public void close() throws IOException {
 		if(out!=null) out.close();
 		if(in!=null) in.close();
-		if(client!=null) client.close();
 		if(server!=null) server.close();
+		if(serverSocket!=null) server.close();
 	}
 
 	public static void main(String[] args) {

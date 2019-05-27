@@ -28,31 +28,40 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText addressEditText;
     private EditText portEditText;
+    private EditText sendMsgEditText;
     private TextView connectTextView;
     private TextView msgTextView;
+    private TextView sendMsgTextView;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        InitView();
+        initView();
+
 
     }
 
-    private void InitView() {
+    private void initView() {
         setContentView(R.layout.activity_main);
         addressEditText=(EditText)findViewById(R.id.addressEditText);
         portEditText=(EditText)findViewById(R.id.portEditText);
+        sendMsgEditText=(EditText)findViewById(R.id.sendMsgEditText);
         connectTextView=(TextView)findViewById(R.id.connectTextView);
         msgTextView=(TextView)findViewById(R.id.msgTextView);
-        connectTextView.setOnClickListener(new ConnectListener());
+        sendMsgTextView=(TextView)findViewById(R.id.sendMsgTextView);
+
         connectTextView.setClickable(true);
         addressEditText.setEnabled(true);
         portEditText.setEnabled(true);
+
+        connectTextView.setOnClickListener(new ConnectListener());
+        sendMsgTextView.setOnClickListener(new SendListener());
     }
 
 
-    public class ConnectListener implements View.OnClickListener {
+    private class ConnectListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -90,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private class ClientTask extends AsyncTask<Void, Void ,MessageBean>{
         @Override
         protected MessageBean doInBackground(Void... voids) {
+            Log.e("test","doInBackground");
             try {
                 client=new Client(address, port);
                 return client.receiveMsg();
@@ -100,20 +110,66 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(MessageBean msgBean){
-            msgTextView.setText(msgBean.toString());
-
-            if(msgBean.getState()==200){
-                connectTextView.setText("断开连接");
-                connectTextView.setClickable(true);
-                addressEditText.setEnabled(false);
-                portEditText.setEnabled(false);
-            }
-
-            else {
+            Log.e("test","onPostExecute");
+            if(msgBean==null || msgBean.getState()!=200){
+                msgTextView.setText("连接失败");
                 connectTextView.setText("连接");
                 connectTextView.setClickable(true);
                 addressEditText.setEnabled(true);
                 portEditText.setEnabled(true);
+                return;
+            }
+            msgTextView.setText(msgBean.toString());
+            connectTextView.setText("断开连接");
+            connectTextView.setClickable(true);
+            addressEditText.setEnabled(false);
+            portEditText.setEnabled(false);
+        }
+    }
+
+    private class SendListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            if(!connectTextView.getText().toString().equals("断开连接") || client==null){
+                Toast.makeText(getApplicationContext(), "未连接", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Log.d("test","SendListener");
+
+            if(sendMsgEditText.getText().toString().isEmpty()){
+                Toast.makeText(getApplicationContext(), "请填写要发送的信息", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            msgBean=new MessageBean();
+            msgBean.setState(200);
+            msgBean.setMessage(sendMsgEditText.getText().toString());
+            client.sendMsg(msgBean);
+
+            new ReceiveTask().execute();
+        }
+    }
+
+    private class ReceiveTask extends AsyncTask<Void, Void ,MessageBean>{
+        @Override
+        protected MessageBean doInBackground(Void... voids) {
+            Log.e("test","doInBackground");
+            try {
+                return client.receiveMsg();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(MessageBean msgBean){
+            Log.e("test","onPostExecute");
+            if(msgBean==null || msgBean.getState()!=200) {
+                msgTextView.setText("发送失败");
+            }
+            else{
+                msgTextView.setText(msgBean.toString());
             }
         }
     }
