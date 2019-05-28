@@ -1,92 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-        <!--触控面板-->
+    <!--触控面板-->
     <TextView
         android:id="@+id/touchTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:height="250dp"
-        android:gravity="center"
         android:background="@drawable/textview_border"
+        android:gravity="center"
         android:text="触控板" />
 
-        <!--连接配置-->
+    <!--连接配置-->
 
-        <LinearLayout
-            android:orientation="vertical"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/addressEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:digits="0123456789."
+            android:hint="IP地址 192.168.1.1"
+            android:inputType="number"
+            android:maxLength="15"
+            android:padding="10dp" />
 
-            <EditText
-                android:id="@+id/addressEditText"
-                android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/portEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="端口 8080"
+            android:inputType="number"
+            android:maxLength="5"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/sendMsgEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="要发送的信息"
+            android:maxLines="2"
+            android:padding="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/connectTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:digits="0123456789."
-                android:hint="IP地址 192.168.1.1"
-                android:inputType="number"
-                android:maxLength="15"
-                android:padding="10dp" />
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/center"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="连接"
+                android:textColor="#FFFFFF" />
 
-            <EditText
-                android:id="@+id/portEditText"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="端口 8080"
-                android:inputType="number"
-                android:maxLength="5"
-                android:padding="10dp" />
+                android:layout_centerInParent="true" />
 
-            <EditText
-                android:id="@+id/sendMsgEditText"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/sendMsgTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="要发送的信息"
-                android:maxLines="2"
-                android:padding="10dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/center"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="发送"
+                android:textColor="#FFFFFF" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent">
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/connectTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:layout_toLeftOf="@id/center"
-                    android:text="连接"
-                    android:textColor="#FFFFFF"
-                    android:background="@color/colorPrimary"/>
-
-                <TextView
-                    android:id="@+id/center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" />
-
-                <TextView
-                    android:id="@+id/sendMsgTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:layout_toRightOf="@id/center"
-                    android:text="发送"
-                    android:textColor="#FFFFFF"
-                    android:background="@color/colorPrimary"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -98,10 +99,10 @@
             android:id="@+id/msgTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="outsideOverlay"
+            android:isScrollContainer="true"
             android:scrollbarFadeDuration="3000"
-            android:isScrollContainer="true" />
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical" />
 
     </ScrollView>
 
