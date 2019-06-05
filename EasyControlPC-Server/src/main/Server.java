@@ -2,6 +2,7 @@ package main;
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class Server {
 	private ServerSocket serverSocket;
@@ -11,13 +12,13 @@ public class Server {
 	private MessageBean msgBean;
 	private Interaction interaction;
 
-	public Server() {
+	public Server(int port) {
 		msgBean = new MessageBean();
 		interaction = new Interaction();
 
 		try {
 			while (true) {
-				serverSocket = new ServerSocket(8888);
+				serverSocket = new ServerSocket(port);
 				System.out.println("等待建立连接");
 				server = serverSocket.accept();
 				// 获取客户端地址和端口信息
@@ -98,6 +99,14 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		new Server();
+		Scanner scan=new Scanner(System.in);
+		System.out.print("请输入开放端口号：");
+		int port;
+		try {
+			port=scan.nextInt();
+			new Server(port);
+		}catch (Exception e){
+			System.out.println("不合法的端口号");
+		}
 	}
 }
