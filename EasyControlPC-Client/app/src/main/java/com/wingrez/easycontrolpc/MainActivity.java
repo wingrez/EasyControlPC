@@ -111,11 +111,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //关闭连接
-        @SuppressLint("SetTextI18n")
         private void shutdown() {
             try {
                 if (client != null) {
-                    client.sendMsg(new MessageBean(-1, "断开连接", 0, 0));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            client.sendMsg(new MessageBean(-1, "断开连接", 0, 0));
+                        }
+                    }).start();
                     client.close();
                 }
                 client = null;
@@ -128,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private class ClientTask extends AsyncTask<Void, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(Void... voids) {
@@ -141,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        @SuppressLint("SetTextI18n")
         protected void onPostExecute(MessageBean msgBean) {
             if (msgBean == null || msgBean.getState() != 1) {
                 msgTextView.setText(Utils.getTime() + " " + "连接失败！\n" + msgTextView.getText());
@@ -155,12 +157,10 @@ public class MainActivity extends AppCompatActivity {
                 addressEditText.setEnabled(false);
                 portEditText.setEnabled(false);
                 new Thread(listenRunnable).start();
-
             }
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private class ListenaTask extends AsyncTask<MessageBean, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(MessageBean... msgBeans) {
@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
             return msgBeans[0];
         }
 
-        @SuppressLint("SetTextI18n")
         protected void onPostExecute(MessageBean msgBean) {
             if (msgBean != null) {
 
@@ -188,7 +187,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (msgBean.getState() == 6) {
-                    client.sendMsg(new MessageBean(2, "客户端已接收！", 0, 0));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            client.sendMsg(new MessageBean(2, "客户端已接收！", 0, 0));
+                        }
+                    }).start();
                 }
             } else {
                 msgTextView.setText(Utils.getTime() + " 与服务端失去连接！\n" + msgTextView.getText());
@@ -219,13 +223,17 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            client.sendMsg(new MessageBean(6, sendMsgEditText.getText().toString(), 0, 0));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.sendMsg(new MessageBean(6, sendMsgEditText.getText().toString(), 0, 0));
+                }
+            }).start();
         }
     }
 
     private class TouchListener implements View.OnTouchListener {
 
-        @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (client == null) {
@@ -241,7 +249,12 @@ public class MainActivity extends AppCompatActivity {
                     nowX = event.getX();
                     nowY = event.getY();
                     if (nowX == preX && nowY == preY) {
-                        client.sendMsg(new MessageBean(5, "鼠标点击", 0, 0));
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.sendMsg(new MessageBean(5, "鼠标点击", 0, 0));
+                            }
+                        }).start();
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -251,7 +264,12 @@ public class MainActivity extends AppCompatActivity {
                     nowY = event.getY();
                     moveX = (int) Math.round(nowX - preX);
                     moveY = (int) Math.round(nowY - preY);
-                    client.sendMsg(new MessageBean(4, "鼠标移动", moveX, moveY));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            client.sendMsg(new MessageBean(4, "鼠标移动", moveX, moveY));
+                        }
+                    }).start();
                     break;
                 default:
                     break;
