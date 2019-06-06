@@ -217,7 +217,8 @@ public class Window {
 
 			try {
 				serverSocket = new ServerSocket(port);
-				outputText.setText(dataformat.format(new Date()) + ": " + "服务已开启，等待建立连接！" + "\n" + outputText.getText());
+				outputText
+						.setText(dataformat.format(new Date()) + ": " + "服务已开启，等待建立连接！" + "\n" + outputText.getText());
 				server = serverSocket.accept();
 				// 获取客户端地址和端口信息
 				remoteIP = server.getInetAddress().getHostAddress();
@@ -232,7 +233,8 @@ public class Window {
 
 			} catch (Exception e) {
 				if (server == null) {
-					outputText.setText(dataformat.format(new Date()) + ": " + "开启服务失败！端口被占用！" + "\n" + outputText.getText());
+					outputText.setText(
+							dataformat.format(new Date()) + ": " + "开启服务失败！端口被占用！" + "\n" + outputText.getText());
 				} else {
 					outputText.setText(dataformat.format(new Date()) + ": " + "失去连接！" + "\n" + outputText.getText());
 				}

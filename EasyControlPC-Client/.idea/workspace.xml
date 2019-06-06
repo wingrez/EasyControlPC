@@ -84,7 +84,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/MessageBean.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="247">
-              <caret line="13" column="17" lean-forward="true" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+              <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -481,7 +481,7 @@
       <window_info id="Build Variants" order="4" side_tool="true" />
       <window_info id="Resources Explorer" order="5" />
       <window_info id="Capture Tool" order="6" />
-      <window_info active="true" content_ui="combo" id="Project" order="7" visible="true" weight="0.18894601" />
+      <window_info content_ui="combo" id="Project" order="7" visible="true" weight="0.18894601" />
       <window_info id="Captures" order="8" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Find" />
       <window_info anchor="bottom" id="Logcat" order="0" />
@@ -492,7 +492,7 @@
       <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.50064266" side_tool="true" weight="0.34724092" />
       <window_info anchor="bottom" id="Build" order="6" sideWeight="0.4993573" weight="0.22611037" />
       <window_info anchor="bottom" id="Android Profiler" order="7" />
-      <window_info anchor="bottom" id="Run" order="8" sideWeight="0.4993573" visible="true" weight="0.29475102" />
+      <window_info active="true" anchor="bottom" id="Run" order="8" sideWeight="0.4993573" visible="true" weight="0.29475102" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Gradle" order="1" weight="0.32969153" />
       <window_info anchor="right" id="Theme Preview" order="2" />
@@ -603,7 +603,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/MessageBean.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
-          <caret line="13" column="17" lean-forward="true" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
         </state>
       </provider>
     </entry>
