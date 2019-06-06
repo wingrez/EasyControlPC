@@ -15,7 +15,7 @@ public class Server {
 	public Server(int port) {
 		msgBean = new MessageBean();
 		interaction = new Interaction();
-
+		
 		try {
 			while (true) {
 				serverSocket = new ServerSocket(port);
@@ -99,6 +99,13 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
+		try {
+			InetAddress addr = InetAddress.getLocalHost();
+			String ip = addr.getHostAddress().toString();
+			System.out.println("本地IP："+ip);
+		} catch (UnknownHostException e1) {
+			System.out.println("本地IP获取失败");
+		}
 		Scanner scan=new Scanner(System.in);
 		System.out.print("请输入开放端口号：");
 		int port;
