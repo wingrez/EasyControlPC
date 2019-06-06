@@ -15,8 +15,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -25,9 +27,11 @@ public class Window {
 
 	private JFrame frame;
 	
-	private JLabel sendMsgLabel;
 	private JLabel portLabel;
+	private JLabel ipLabel;
+	private JLabel sendMsgLabel;
 	
+	private JTextField ipText;
 	private JTextField portText;
 	private JTextArea msgText;
 	private JTextArea outputText;
@@ -74,27 +78,39 @@ public class Window {
 		frame.setVisible(true);
 		frame.setResizable(false);
 
+		ipLabel = new JLabel("IP");
+		ipLabel.setBounds(30, 10, 30, 30);
+		frame.getContentPane().add(ipLabel);
+		
 		portLabel = new JLabel("端口");
-		portLabel.setBounds(30, 20, 30, 30);
+		portLabel.setBounds(30, 40, 30, 30);
 		frame.getContentPane().add(portLabel);
 
 		sendMsgLabel = new JLabel("消息");
-		sendMsgLabel.setBounds(30, 50, 30, 30);
+		sendMsgLabel.setBounds(30, 70, 30, 30);
 		frame.getContentPane().add(sendMsgLabel);
+		
+		ipText = new JTextField(5);
+		ipText.setToolTipText("本地IP");
+		ipText.setBounds(80, 10, 100, 25);
+		ipText.setEditable(false);
+		frame.getContentPane().add(ipText);
+		ipText.setColumns(10);
 		
 		portText = new JTextField(5);
 		portText.setToolTipText("开放端口号");
-		portText.setBounds(80, 20, 75, 25);
+		portText.setBounds(80, 40, 100, 25);
 		frame.getContentPane().add(portText);
 		portText.setColumns(10);
 		
 		msgText = new JTextArea();
 		msgText.setToolTipText("发送给客户端的消息");
 		msgText.setLineWrap(true);
-		msgText.setBounds(80, 50, 180, 120);
+		msgText.setBounds(80, 70, 180, 120);
 		frame.getContentPane().add(msgText);
 		msgText.setColumns(10);
 
+		
 		startButton = new JButton("开启服务");
 		startButton.setBounds(45, 200, 100, 25);
 		frame.getContentPane().add(startButton);
@@ -106,8 +122,18 @@ public class Window {
 		outputText = new JTextArea();
 		outputText.setEditable(false);
 		outputText.setLineWrap(true);
-		outputText.setBounds(0, 239, 294, 233);
+		outputText.setBounds(0, 240, 294, 232);
 		frame.getContentPane().add(outputText);
+		
+		try {
+			InetAddress addr = InetAddress.getLocalHost();
+			String ip=addr.getHostAddress().toString();
+			ipText.setText(ip);
+		} catch (UnknownHostException e1) {
+			ipText.setText("本地IP获取失败！");
+		}  
+        
+		
 		
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
