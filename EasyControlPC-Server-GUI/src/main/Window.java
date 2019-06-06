@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -140,6 +141,7 @@ public class Window {
 							server.sendMsg(-1, "断开连接！");
 							server.close();
 						}
+						server = null;
 						outputText.setText(dataformat.format(new Date()) + ": " + "关闭服务成功！\n" + outputText.getText());
 						startButton.setText("开启服务");
 						portText.setEditable(true);
@@ -168,11 +170,11 @@ public class Window {
 						public void run() {
 							server = new Server(port);
 							if (server != null && server.isConnected()) {
-								server.listen();
-							} else {
-								startButton.setText("开启服务");
-								portText.setEditable(true);
+								server.listen(); // 循环监听
 							}
+							server = null;
+							startButton.setText("开启服务");
+							portText.setEditable(true);
 						}
 					}).start();
 
@@ -224,8 +226,8 @@ public class Window {
 				remoteIP = server.getInetAddress().getHostAddress();
 				remotePort = server.getLocalPort();
 				// 获取客户端的输入输出流
-				in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-				out = new PrintWriter(server.getOutputStream(), false);
+				in = new BufferedReader(new InputStreamReader(server.getInputStream(), "UTF-8"));
+				out = new PrintWriter(new OutputStreamWriter(server.getOutputStream(), "UTF-8"), false);
 				outputText.setText(dataformat.format(new Date()) + ": " + "客户端上线：" + remoteIP + ":" + remotePort + "\n"
 						+ outputText.getText());
 				// 发送连接成功消息

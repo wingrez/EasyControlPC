@@ -68,11 +68,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="279">
               <caret line="116" column="26" selection-start-line="116" selection-start-column="26" selection-end-line="116" selection-end-column="26" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Client.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="70">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -111,7 +123,7 @@
     </findStrings>
   </component>
   <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="D:\EasyControlPC.jks" />
+    <option name="KEY_STORE_PATH" value="D:\document\key\EasyControlPC.jks" />
     <option name="KEY_ALIAS" value="key0" />
     <option name="BUILD_TARGET_KEY" value="apk" />
   </component>
@@ -126,11 +138,11 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_list.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Time.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/MessageBean.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Client.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Utils.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/textview_border.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Client.java" />
       </list>
     </option>
   </component>
@@ -363,8 +375,8 @@
     <property name="ExportApk.SignV1" value="true" />
     <property name="ExportApk.SignV2" value="true" />
     <property name="device.picker.selection" value="ed93e70b" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app" />
-    <property name="project.structure.last.edited" value="Dependencies" />
+    <property name="last_opened_file_path" value="D:/document/key/EasyControlPC.jks" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -472,7 +484,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" />
       <window_info id="Image Layers" order="1" />
@@ -481,7 +492,7 @@
       <window_info id="Build Variants" order="4" side_tool="true" />
       <window_info id="Resources Explorer" order="5" />
       <window_info id="Capture Tool" order="6" />
-      <window_info content_ui="combo" id="Project" order="7" visible="true" weight="0.18894601" />
+      <window_info active="true" content_ui="combo" id="Project" order="7" visible="true" weight="0.18894601" />
       <window_info id="Captures" order="8" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Find" />
       <window_info anchor="bottom" id="Logcat" order="0" />
@@ -492,7 +503,7 @@
       <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.50064266" side_tool="true" weight="0.34724092" />
       <window_info anchor="bottom" id="Build" order="6" sideWeight="0.4993573" weight="0.22611037" />
       <window_info anchor="bottom" id="Android Profiler" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="8" sideWeight="0.4993573" visible="true" weight="0.29475102" />
+      <window_info anchor="bottom" id="Run" order="8" sideWeight="0.4993573" visible="true" weight="0.29475102" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Gradle" order="1" weight="0.32969153" />
       <window_info anchor="right" id="Theme Preview" order="2" />
@@ -580,16 +591,6 @@
       </provider>
       <provider editor-type-id="android-manifest" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/jre/jre/lib/rt.jar!/java/net/PlainSocketImpl.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -611,6 +612,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="279">
           <caret line="116" column="26" selection-start-line="116" selection-start-column="26" selection-end-line="116" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wingrez/easycontrolpc/utils/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
