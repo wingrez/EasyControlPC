@@ -19,7 +19,7 @@ public class Server {
 		try {
 			while (true) {
 				serverSocket = new ServerSocket(port);
-				System.out.println("等待建立连接");
+				System.out.println("服务已开启，等待建立连接");
 				server = serverSocket.accept();
 				// 获取客户端地址和端口信息
 				String remoteIP = server.getInetAddress().getHostAddress();
