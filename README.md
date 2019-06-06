@@ -1,6 +1,9 @@
 # EasyControlPC
 ---
-### 使用方法
+### v 2.0
+>按照提示使用。
+>
+### v 1.0 使用方法
 >1、在Android系统上安装EasyControlPC.apk
 >
 >2、在Windows系统上运行runServer.bat
