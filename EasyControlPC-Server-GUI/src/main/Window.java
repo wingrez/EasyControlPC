@@ -26,23 +26,23 @@ import java.awt.event.ActionEvent;
 public class Window {
 
 	private JFrame frame;
-	
+
 	private JLabel portLabel;
 	private JLabel ipLabel;
 	private JLabel sendMsgLabel;
-	
+
 	private JTextField ipText;
 	private JTextField portText;
 	private JTextArea msgText;
 	private JTextArea outputText;
-	
+
 	private JButton startButton;
 	private JButton sendButton;
-	
+
 	private Server server;
-	
-	private SimpleDateFormat dataformat=new SimpleDateFormat("hh:mm:ss");
-	
+
+	private SimpleDateFormat dataformat = new SimpleDateFormat("hh:mm:ss");
+
 	/**
 	 * Launch the application.
 	 */
@@ -81,7 +81,7 @@ public class Window {
 		ipLabel = new JLabel("IP");
 		ipLabel.setBounds(30, 10, 30, 30);
 		frame.getContentPane().add(ipLabel);
-		
+
 		portLabel = new JLabel("端口");
 		portLabel.setBounds(30, 40, 30, 30);
 		frame.getContentPane().add(portLabel);
@@ -89,20 +89,20 @@ public class Window {
 		sendMsgLabel = new JLabel("消息");
 		sendMsgLabel.setBounds(30, 70, 30, 30);
 		frame.getContentPane().add(sendMsgLabel);
-		
+
 		ipText = new JTextField(5);
 		ipText.setToolTipText("本地IP");
 		ipText.setBounds(80, 10, 100, 25);
 		ipText.setEditable(false);
 		frame.getContentPane().add(ipText);
 		ipText.setColumns(10);
-		
+
 		portText = new JTextField(5);
 		portText.setToolTipText("开放端口号");
 		portText.setBounds(80, 40, 100, 25);
 		frame.getContentPane().add(portText);
 		portText.setColumns(10);
-		
+
 		msgText = new JTextArea();
 		msgText.setToolTipText("发送给客户端的消息");
 		msgText.setLineWrap(true);
@@ -110,92 +110,90 @@ public class Window {
 		frame.getContentPane().add(msgText);
 		msgText.setColumns(10);
 
-		
 		startButton = new JButton("开启服务");
 		startButton.setBounds(45, 200, 100, 25);
 		frame.getContentPane().add(startButton);
-		
+
 		sendButton = new JButton("发送消息");
 		sendButton.setBounds(155, 200, 100, 25);
 		frame.getContentPane().add(sendButton);
-		
+
 		outputText = new JTextArea();
 		outputText.setEditable(false);
 		outputText.setLineWrap(true);
 		outputText.setBounds(0, 240, 294, 232);
 		frame.getContentPane().add(outputText);
-		
+
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
-			String ip=addr.getHostAddress().toString();
+			String ip = addr.getHostAddress().toString();
 			ipText.setText(ip);
 		} catch (UnknownHostException e1) {
 			ipText.setText("本地IP获取失败！");
-		}  
-        
-		
-		
+		}
+
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(startButton.getText().equals("关闭服务")) {
+				if (startButton.getText().equals("关闭服务")) {
 					try {
-						if(server!=null) {
-							server.sendMsg(-1,msgText.getText());
-							server.close(); 
+						if (server != null) {
+							server.sendMsg(-1, msgText.getText());
+							server.close();
 						}
-						outputText.setText(dataformat.format(new Date())+": "+"关闭服务成功！\n"+outputText.getText());
+						outputText.setText(dataformat.format(new Date()) + ": " + "关闭服务成功！\n" + outputText.getText());
 						startButton.setText("开启服务");
 						portText.setEditable(true);
 					} catch (Exception e) {
-						outputText.setText(dataformat.format(new Date())+": "+"关闭服务失败！\n"+outputText.getText());
+						outputText.setText(dataformat.format(new Date()) + ": " + "关闭服务失败！\n" + outputText.getText());
 						return;
 					}
 				}
-				
-				else if(startButton.getText().equals("开启服务")){
+
+				else if (startButton.getText().equals("开启服务")) {
 					int port;
 					try {
-						port=Integer.parseInt(portText.getText());
-						if(port<0 || port>65535) throw new Exception();
-					}catch(Exception e){
-						outputText.setText(dataformat.format(new Date())+": "+"端口号不合法！\n"+outputText.getText());
+						port = Integer.parseInt(portText.getText());
+						if (port < 0 || port > 65535)
+							throw new Exception();
+					} catch (Exception e) {
+						outputText.setText(dataformat.format(new Date()) + ": " + "端口号不合法！\n" + outputText.getText());
 						return;
 					}
-					
+
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							server=new Server(port);
+							server = new Server(port);
 							server.listen();
 						}
 					}).start();
-					
+
 					startButton.setText("关闭服务");
 					portText.setEditable(false);
 				}
-				
+
 			}
 		});
-		
+
 		sendButton.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
-				if(server==null) {
-					outputText.setText(dataformat.format(new Date())+": "+"连接未建立！\n"+outputText.getText());
+				if (server == null) {
+					outputText.setText(dataformat.format(new Date()) + ": " + "连接未建立！\n" + outputText.getText());
 					return;
 				}
-				if(msgText.getText().isEmpty()) {
-					outputText.setText(dataformat.format(new Date())+": "+"消息为空！\n"+outputText.getText());
+				if (msgText.getText().isEmpty()) {
+					outputText.setText(dataformat.format(new Date()) + ": " + "消息为空！\n" + outputText.getText());
 					return;
 				}
-				
-				server.sendMsg(6,msgText.getText());
-				
+
+				server.sendMsg(6, msgText.getText());
+
 			}
 		});
-		
+
 	}
-	
+
 	private class Server {
 		private ServerSocket serverSocket;
 		private Socket server;
@@ -203,7 +201,7 @@ public class Window {
 		private PrintWriter out;
 		private MessageBean msgBean;
 		private Interaction interaction;
-		
+
 		private String remoteIP;
 		private int remotePort;
 
@@ -214,8 +212,8 @@ public class Window {
 			try {
 				serverSocket = new ServerSocket(port);
 
-				outputText.setText(dataformat.format(new Date())+": "+"服务已开启，等待建立连接"+"\n"+outputText.getText());
-				
+				outputText.setText(dataformat.format(new Date()) + ": " + "服务已开启，等待建立连接" + "\n" + outputText.getText());
+
 				server = serverSocket.accept();
 				// 获取客户端地址和端口信息
 				remoteIP = server.getInetAddress().getHostAddress();
@@ -223,29 +221,35 @@ public class Window {
 				// 获取客户端的输入输出流
 				in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 				out = new PrintWriter(server.getOutputStream(), false);
-				
-				outputText.setText(dataformat.format(new Date())+": "+"客户端上线：" + remoteIP + ":" + remotePort+"\n"+outputText.getText());
-				
+
+				outputText.setText(dataformat.format(new Date()) + ": " + "客户端上线：" + remoteIP + ":" + remotePort + "\n"
+						+ outputText.getText());
+
 				// 发送连接成功消息
 				sendMsg(new MessageBean(1, "欢迎使用EasyControlPC", 0, 0));
-				
+
 			} catch (Exception e) {
-				if(server==null) outputText.setText(dataformat.format(new Date())+": "+"开启服务失败。端口被占用。"+"\n"+outputText.getText());
-				else outputText.setText(dataformat.format(new Date())+": "+"失去连接！"+"\n"+outputText.getText());
+				if (server == null)
+					outputText.setText(
+							dataformat.format(new Date()) + ": " + "开启服务失败。端口被占用。" + "\n" + outputText.getText());
+				else
+					outputText.setText(dataformat.format(new Date()) + ": " + "失去连接！" + "\n" + outputText.getText());
 			}
 
 		}
-		
+
 		public void listen() {
 			// 接收客户端消息
 			try {
 				while (true) {
 					msgBean = receiveMsg();
 					if (msgBean != null) {
-						outputText.setText(dataformat.format(new Date())+": "+"接收到消息：" + msgBean.getMessage()+"\n"+outputText.getText());
+						outputText.setText(dataformat.format(new Date()) + ": " + "接收到消息：" + msgBean.getMessage() + "\n"
+								+ outputText.getText());
 
 						if (msgBean.getState() == -1) {
-							outputText.setText(dataformat.format(new Date())+": "+"客户端退出：" + remoteIP + ":" + remotePort+"\n"+outputText.getText());
+							outputText.setText(dataformat.format(new Date()) + ": " + "客户端退出：" + remoteIP + ":"
+									+ remotePort + "\n" + outputText.getText());
 							close();
 							break;
 						}
@@ -260,16 +264,17 @@ public class Window {
 
 						sendMsg(new MessageBean(2, "服务端已接收！", 0, 0));
 					} else {
-						outputText.setText(dataformat.format(new Date())+": "+"客户端退出：" + remoteIP + ":" + remotePort+"\n"+outputText.getText());
+						outputText.setText(dataformat.format(new Date()) + ": " + "客户端退出：" + remoteIP + ":" + remotePort
+								+ "\n" + outputText.getText());
 						close();
 						break;
 					}
 				}
-			}catch(Exception e) {
-				outputText.setText(dataformat.format(new Date())+": "+"消息接收或发送失败！"+"\n"+outputText.getText());
+			} catch (Exception e) {
+				outputText.setText(dataformat.format(new Date()) + ": " + "消息接收或发送失败！" + "\n" + outputText.getText());
 			}
 		}
-		
+
 		public void sendMsg(int state, String msg) {
 			if (out != null) {
 				out.println(new MessageBean(state, msg, 0, 0).toString());
@@ -304,6 +309,6 @@ public class Window {
 			if (serverSocket != null)
 				serverSocket.close();
 		}
-		
+
 	}
 }
