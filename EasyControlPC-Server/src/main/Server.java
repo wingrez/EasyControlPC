@@ -15,7 +15,7 @@ public class Server {
 	public Server(int port) {
 		msgBean = new MessageBean();
 		interaction = new Interaction();
-		
+
 		try {
 			while (true) {
 				serverSocket = new ServerSocket(port);
@@ -102,17 +102,17 @@ public class Server {
 		try {
 			InetAddress addr = InetAddress.getLocalHost();
 			String ip = addr.getHostAddress().toString();
-			System.out.println("本地IP："+ip);
+			System.out.println("本地IP：" + ip);
 		} catch (UnknownHostException e1) {
 			System.out.println("本地IP获取失败");
 		}
-		Scanner scan=new Scanner(System.in);
+		Scanner scan = new Scanner(System.in);
 		System.out.print("请输入开放端口号：");
 		int port;
 		try {
-			port=scan.nextInt();
+			port = scan.nextInt();
 			new Server(port);
-		}catch (Exception e){
+		} catch (Exception e) {
 			System.out.println("不合法的端口号");
 		}
 	}
