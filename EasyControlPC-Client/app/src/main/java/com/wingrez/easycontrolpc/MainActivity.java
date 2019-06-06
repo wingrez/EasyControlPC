@@ -2,9 +2,8 @@ package com.wingrez.easycontrolpc;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -35,17 +34,17 @@ public class MainActivity extends AppCompatActivity {
     private int moveX;
     private int moveY;
 
-    Runnable listenRunnable=new Runnable(){
+    Runnable listenRunnable = new Runnable() {
         @Override
         public void run() {
-            while(true){
+            while (true) {
                 try {
-                    if(client!=null){
+                    if (client != null) {
                         MessageBean msgBean = client.receiveMsg();
                         new ListenaTask().execute(msgBean);
-                        if(msgBean==null || msgBean.getState()==-1) break;
+                        if (msgBean == null || msgBean.getState() == -1) break;
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        client=null;
+        client = null;
     }
 
     private void initView() {
@@ -114,18 +113,18 @@ public class MainActivity extends AppCompatActivity {
         //关闭连接
         @SuppressLint("SetTextI18n")
         private void shutdown() {
-                try {
-                    if (client != null) {
-                        client.sendMsg(new MessageBean(-1, "断开连接", 0, 0));
-                        client.close();
-                    }
-                    client = null;
-                    connectTextView.setText("连接");
-                    addressEditText.setEnabled(true);
-                    portEditText.setEnabled(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                if (client != null) {
+                    client.sendMsg(new MessageBean(-1, "断开连接", 0, 0));
+                    client.close();
                 }
+                client = null;
+                connectTextView.setText("连接");
+                addressEditText.setEnabled(true);
+                portEditText.setEnabled(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -165,20 +164,20 @@ public class MainActivity extends AppCompatActivity {
     private class ListenaTask extends AsyncTask<MessageBean, Void, MessageBean> {
         @Override
         protected MessageBean doInBackground(MessageBean... msgBeans) {
-            if(msgBeans==null) return null;
+            if (msgBeans == null) return null;
             return msgBeans[0];
         }
 
         @SuppressLint("SetTextI18n")
         protected void onPostExecute(MessageBean msgBean) {
-            if (msgBean != null){
+            if (msgBean != null) {
 
                 msgTextView.setText(Utils.getTime() + " 接收到消息：" + msgBean.getMessage() + "\n" + msgTextView.getText());
 
-                if(msgBean.getState()==-1){
-                    msgTextView.setText(Utils.getTime() + " 服务端已下线！" +"\n" + msgTextView.getText());
+                if (msgBean.getState() == -1) {
+                    msgTextView.setText(Utils.getTime() + " 服务端已下线！" + "\n" + msgTextView.getText());
                     try {
-                        if(client!=null) client.close();
+                        if (client != null) client.close();
                         client = null;
                         connectTextView.setText("连接");
                         addressEditText.setEnabled(true);
@@ -188,14 +187,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if(msgBean.getState()==6) {
-                    client.sendMsg(new MessageBean(2,"客户端已接收！",0,0));
+                if (msgBean.getState() == 6) {
+                    client.sendMsg(new MessageBean(2, "客户端已接收！", 0, 0));
                 }
-            }
-            else {
+            } else {
                 msgTextView.setText(Utils.getTime() + " 与服务端失去连接！\n" + msgTextView.getText());
                 try {
-                    if(client!=null) client.close();
+                    if (client != null) client.close();
                     client = null;
                     connectTextView.setText("连接");
                     addressEditText.setEnabled(true);
