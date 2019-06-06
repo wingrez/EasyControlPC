@@ -137,7 +137,7 @@ public class Window {
 				if (startButton.getText().equals("关闭服务")) {
 					try {
 						if (server != null) {
-							server.sendMsg(-1, msgText.getText());
+							server.sendMsg(-1, "断开连接！");
 							server.close();
 						}
 						outputText.setText(dataformat.format(new Date()) + ": " + "关闭服务成功！\n" + outputText.getText());
@@ -160,16 +160,22 @@ public class Window {
 						return;
 					}
 
+					startButton.setText("关闭服务");
+					portText.setEditable(false);
+
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
 							server = new Server(port);
-							server.listen();
+							if (server != null && server.isConnected()) {
+								server.listen();
+							} else {
+								startButton.setText("开启服务");
+								portText.setEditable(true);
+							}
 						}
 					}).start();
 
-					startButton.setText("关闭服务");
-					portText.setEditable(false);
 				}
 
 			}
@@ -211,9 +217,7 @@ public class Window {
 
 			try {
 				serverSocket = new ServerSocket(port);
-
-				outputText.setText(dataformat.format(new Date()) + ": " + "服务已开启，等待建立连接" + "\n" + outputText.getText());
-
+				outputText.setText(dataformat.format(new Date()) + ": " + "服务已开启，等待建立连接！" + "\n" + outputText.getText());
 				server = serverSocket.accept();
 				// 获取客户端地址和端口信息
 				remoteIP = server.getInetAddress().getHostAddress();
@@ -221,19 +225,17 @@ public class Window {
 				// 获取客户端的输入输出流
 				in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 				out = new PrintWriter(server.getOutputStream(), false);
-
 				outputText.setText(dataformat.format(new Date()) + ": " + "客户端上线：" + remoteIP + ":" + remotePort + "\n"
 						+ outputText.getText());
-
 				// 发送连接成功消息
 				sendMsg(new MessageBean(1, "欢迎使用EasyControlPC", 0, 0));
 
 			} catch (Exception e) {
-				if (server == null)
-					outputText.setText(
-							dataformat.format(new Date()) + ": " + "开启服务失败。端口被占用。" + "\n" + outputText.getText());
-				else
+				if (server == null) {
+					outputText.setText(dataformat.format(new Date()) + ": " + "开启服务失败！端口被占用！" + "\n" + outputText.getText());
+				} else {
 					outputText.setText(dataformat.format(new Date()) + ": " + "失去连接！" + "\n" + outputText.getText());
+				}
 			}
 
 		}
@@ -244,11 +246,12 @@ public class Window {
 				while (true) {
 					msgBean = receiveMsg();
 					if (msgBean != null) {
+
 						outputText.setText(dataformat.format(new Date()) + ": " + "接收到消息：" + msgBean.getMessage() + "\n"
 								+ outputText.getText());
 
 						if (msgBean.getState() == -1) {
-							outputText.setText(dataformat.format(new Date()) + ": " + "客户端退出：" + remoteIP + ":"
+							outputText.setText(dataformat.format(new Date()) + ": " + "客户端下线：" + remoteIP + ":"
 									+ remotePort + "\n" + outputText.getText());
 							close();
 							break;
@@ -262,7 +265,10 @@ public class Window {
 							interaction.click();
 						}
 
-						sendMsg(new MessageBean(2, "服务端已接收！", 0, 0));
+						else if (msgBean.getState() == 6) {
+							sendMsg(new MessageBean(2, "服务端已接收！", 0, 0));
+						}
+
 					} else {
 						outputText.setText(dataformat.format(new Date()) + ": " + "客户端退出：" + remoteIP + ":" + remotePort
 								+ "\n" + outputText.getText());
@@ -297,6 +303,12 @@ public class Window {
 				return null;
 			}
 			return null;
+		}
+
+		public boolean isConnected() {
+			if (serverSocket != null)
+				return true;
+			return false;
 		}
 
 		public void close() throws IOException {
